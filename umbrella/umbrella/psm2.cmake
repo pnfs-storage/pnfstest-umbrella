@@ -1,5 +1,5 @@
 #
-# psm2.cmake  intel omnipath psm2 interface to their ib network cards
+# psm2.cmake  psm2 interface for omnipath ib network cards
 # 09-Feb-2021  chuck@ece.cmu.edu
 #
 
@@ -9,18 +9,19 @@
 #  PSM2_TAG  - tag to checkout of git
 #  PSM2_TAR  - cache tar file name (default should be ok)
 #
+# note: cornelisnetworks has taken over psm2 from intel
 
 if (NOT TARGET psm2)
 
 #
 # umbrella option variables
 #
-# XXX: for testing use chuck's "combo" version (has extra fixes)
 # XXX: doesn't install psm compat lib or include/hfi1diag files
 #
-umbrella_defineopt (PSM2_REPO "https://github.com/chuckcranor/opa-psm2.git"
+umbrella_defineopt (PSM2_REPO
+                    "https://github.com/cornelisnetworks/opa-psm2.git"
                     STRING "PSM2 GIT repository")
-umbrella_defineopt (PSM2_TAG "combo" STRING "PSM2 GIT tag")
+umbrella_defineopt (PSM2_TAG "master" STRING "PSM2 GIT tag")
 umbrella_defineopt (PSM2_TAR "psm2-${PSM2_TAG}.tar.gz" STRING
                     "PSM2 cache tar file")
 umbrella_defineopt (PSM2_USE_AVX2 "ON" BOOL
@@ -28,6 +29,7 @@ umbrella_defineopt (PSM2_USE_AVX2 "ON" BOOL
 
 if (PSM2_USE_AVX2)
     message(STATUS "  psm2 - using AVX2 instructions")
+    unset(xtra_cfg)
 else()
     message(STATUS "  psm2 - disable AVX2 instructions")
     set(xtra_cfg "PSM_DISABLE_AVX2=1")
