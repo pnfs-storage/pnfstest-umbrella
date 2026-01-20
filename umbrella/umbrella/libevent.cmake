@@ -9,6 +9,10 @@
 #  LIBEVENT_TAG  - tag to checkout of git
 #  LIBEVENT_TAR  - cache tar file name (default should be ok)
 #
+#  LIBEVENT_LIBDIR - value for CMAKE_INSTALL_LIBDIR (for GNUInstallDirs.cmake)
+#                    set to "" or "default" to take the system default.
+#                    our default for umbrella is "lib"...
+#
 
 umbrella_prebuilt_check(libevent FILE event2/event.h)
 
@@ -24,6 +28,15 @@ umbrella_defineopt (LIBEVENT_TAR
      "libevent-${LIBEVENT_TAG}.tar.gz"
      STRING "libevent cache tar file")
 
+umbrella_defineopt (LIBEVENT_LIBDIR "lib" STRING "libdir for GNUInstallDirs")
+
+if ("${LIBEVENT_LIBDIR}" STREQUAL "" OR
+    "${LIBEVENT_LIBDIR}"  STREQUAL "default")
+    unset(libevent_libdirflag)
+else()
+    set(libevent_libdirflag -DCMAKE_INSTALL_LIBDIR=${LIBEVENT_LIBDIR})
+endif()
+
 #
 # generate parts of the ExternalProject_Add args...
 #
@@ -36,7 +49,7 @@ umbrella_patchcheck (LIBEVENT_PATCHCMD libevent)
 # create deltafs-nexus target
 #
 ExternalProject_Add (libevent ${LIBEVENT_DOWNLOAD} ${LIBEVENT_PATCHCMD}
-    CMAKE_ARGS -DBUILD_SHARED_LIBS=ON
+    CMAKE_ARGS -DBUILD_SHARED_LIBS=ON ${libevent_libdirflag}
     CMAKE_CACHE_ARGS ${UMBRELLA_CMAKECACHE}
     UPDATE_COMMAND ""
 )
