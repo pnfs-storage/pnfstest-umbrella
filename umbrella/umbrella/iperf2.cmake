@@ -5,9 +5,9 @@
 
 #
 # config:
-#  IPERF2_BASEURL - base url of iperf2
-#  IPERF2_URLFILE - tar file within basedir
-#  IPERF2_URLMD5  - md5 of tar file
+#  IPERF2_REPO - url of git repository
+#  IPERF2_TAG  - tag to checkout of git
+#  IPERF2_TAR  - cache tar file name (default should be ok)
 #
 
 if (NOT TARGET iperf2)
@@ -15,30 +15,27 @@ if (NOT TARGET iperf2)
 #
 # umbrella option variables
 #
-umbrella_defineopt (IPERF2_BASEURL
-    "http://downloads.sourceforge.net/sourceforge/iperf2"
-    STRING "base url for iperf2")
-umbrella_defineopt (IPERF2_URLFILE "iperf-2.0.13.tar.gz"
-    STRING "iperf2 tar file name")
-umbrella_defineopt (IPERF2_URLMD5 "31ea1c6d5cbf80b16ff3abe4288dad5e"
-    STRING "MD5 of tar file")
+umbrella_defineopt (IPERF2_REPO "https://git.code.sf.net/p/iperf2/code"
+                    STRING "IPERF2 GIT repository")
+umbrella_defineopt (IPERF2_TAG "master" STRING "IPERF2 GIT tag")
+umbrella_defineopt (IPERF2_TAR "iperf2-${IPERF2_TAG}.tar.gz"
+                                STRING "IPERF2 cache tar file")
 
 #
 # generate parts of the ExternalProject_Add args...
 #
-umbrella_download (IPERF2_DOWNLOAD iperf2 ${IPERF2_URLFILE}
-    URL "${IPERF2_BASEURL}/${IPERF2_URLFILE}"
-    URL_MD5 ${IPERF2_URLMD5})
+umbrella_download (IPERF2_DOWNLOAD iperf2 ${IPERF2_TAR}
+                   GIT_REPOSITORY ${IPERF2_REPO}
+                   GIT_TAG ${IPERF2_TAG})
 umbrella_patchcheck (IPERF2_PATCHCMD iperf2)
 
 #
-# create iperf2 target -- this is fairly customized for our usage
+# create iperf2 target
 #
 ExternalProject_Add (iperf2 ${IPERF2_DOWNLOAD} ${IPERF2_PATCHCMD}
     CONFIGURE_COMMAND <SOURCE_DIR>/configure ${UMBRELLA_COMP}
                       ${UMBRELLA_CPPFLAGS} ${UMBRELLA_LDFLAGS}
                       --prefix=${CMAKE_INSTALL_PREFIX}
-                      --enable-shared
-                      UPDATE_COMMAND "")
+    UPDATE_COMMAND "")
 
 endif (NOT TARGET iperf2)
