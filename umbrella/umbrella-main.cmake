@@ -323,7 +323,7 @@ endfunction()
 #    TRY - use a prebuilt version of target if found, otherwise we build it
 #
 function (umbrella_prebuilt target)
-    umbrella_target_setting(PREBUILT ${target} OFF BOOL
+    umbrella_target_setting(PREBUILT ${target} OFF STRING
         "${target} is prebuilt" "ON;OFF;TRY")
 endfunction()
 
@@ -376,6 +376,7 @@ function(umbrella_prebuilt_check target)
         umbrella_targetvar_prefix("${target}" prefix)
         umbrella_prebuilt(${target})
         set(value "${${prefix}PREBUILT}")    # ON;OFF;TRY
+        string(TOUPPER "${value}" value)     # make it case insensitive
 
         # try for a prebuilt target if we are ON or TRY
         if ("${value}" STREQUAL "ON" OR "${value}" STREQUAL "TRY")
