@@ -32,13 +32,14 @@ umbrella_patchcheck (PERFTEST_PATCHCMD perftest)
 #
 # depends
 #
+include (umbrella/pciutils)
 include (umbrella/rdma-core)
 
 #
 # create perftest target
 # XXX: set MAKEINFO=true, or it will fail without makeinfo cmd
 #
-ExternalProject_Add (perftest DEPENDS rdma-core
+ExternalProject_Add (perftest DEPENDS pciutils rdma-core
     ${PERFTEST_DOWNLOAD} ${PERFTEST_PATCHCMD}
     CONFIGURE_COMMAND <SOURCE_DIR>/configure ${UMBRELLA_COMP}
                       ${UMBRELLA_CPPFLAGS} ${UMBRELLA_LDFLAGS}
