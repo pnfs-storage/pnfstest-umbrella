@@ -8,6 +8,10 @@ if(POLICY CMP0054)
     # can be removed once cmake 3.1 is required
     cmake_policy(SET CMP0054 NEW)
 endif()
+if(POLICY CMP0135)
+    # XXX: at some point we should explore if we can work with the NEW policy
+    cmake_policy(SET CMP0135 OLD)
+endif()
 
 #
 # if CC/CXX is specified from the command line (vs. environment vars)
