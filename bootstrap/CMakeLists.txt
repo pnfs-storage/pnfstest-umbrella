@@ -76,7 +76,7 @@ cmake_minimum_required (VERSION 3.6)
 # (umbrella-init needs to run before "project")
 #
 list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../umbrella")
-include (umbrella-init)
+include (umbrella-init NO_POLICY_SCOPE)
 
 project (umbrella-bootstrap C CXX)
 
