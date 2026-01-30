@@ -17,10 +17,11 @@ if (NOT TARGET automake)
 #
 umbrella_defineopt (AUTOMAKE_BASEURL
     "http://ftp.gnu.org/gnu/automake" STRING "base url for automake")
-umbrella_defineopt (AUTOMAKE_URLFILE "automake-1.15.1.tar.gz"
+umbrella_defineopt (AUTOMAKE_URLFILE "automake-1.18.1.tar.gz"
     STRING "automake tar file name")
-umbrella_defineopt (AUTOMAKE_URLMD5 "95df3f2d6eb8f81e70b8cb63a93c8853"
+umbrella_defineopt (AUTOMAKE_URLMD5 "5a645b175491f97de4505aae83895017"
     STRING "MD5 of tar file")
+
 
 #
 # generate parts of the ExternalProject_Add args...
@@ -31,9 +32,15 @@ umbrella_download (AUTOMAKE_DOWNLOAD automake ${AUTOMAKE_URLFILE}
 umbrella_patchcheck (AUTOMAKE_PATCHCMD automake)
 
 #
+# depends
+#
+include (umbrella/autoconf)
+
+#
 # create automake target
 #
-ExternalProject_Add (automake ${AUTOMAKE_DOWNLOAD} ${AUTOMAKE_PATCHCMD}
+ExternalProject_Add (automake DEPENDS autoconf
+    ${AUTOMAKE_DOWNLOAD} ${AUTOMAKE_PATCHCMD}
     CONFIGURE_COMMAND <SOURCE_DIR>/configure ${UMBRELLA_COMP}
                       ${UMBRELLA_CPPFLAGS} ${UMBRELLA_LDFLAGS}
                       --prefix=${CMAKE_INSTALL_PREFIX}

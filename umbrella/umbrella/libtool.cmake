@@ -17,9 +17,9 @@ if (NOT TARGET libtool)
 #
 umbrella_defineopt (LIBTOOL_BASEURL
     "http://ftp.gnu.org/gnu/libtool" STRING "base url for libtool")
-umbrella_defineopt (LIBTOOL_URLFILE "libtool-2.4.6.tar.gz"
+umbrella_defineopt (LIBTOOL_URLFILE "libtool-2.5.4.tar.gz"
     STRING "libtool tar file name")
-umbrella_defineopt (LIBTOOL_URLMD5 "addf44b646ddb4e3919805aa88fa7c5e"
+umbrella_defineopt (LIBTOOL_URLMD5 "862d906983d9b423b072285d999d8672"
     STRING "MD5 of tar file")
 
 #

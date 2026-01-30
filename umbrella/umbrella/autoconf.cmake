@@ -17,9 +17,9 @@ if (NOT TARGET autoconf)
 #
 umbrella_defineopt (AUTOCONF_BASEURL
     "http://ftp.gnu.org/gnu/autoconf" STRING "base url for autoconf")
-umbrella_defineopt (AUTOCONF_URLFILE "autoconf-2.69.tar.gz"
+umbrella_defineopt (AUTOCONF_URLFILE "autoconf-2.72.tar.gz"
     STRING "autoconf tar file name")
-umbrella_defineopt (AUTOCONF_URLMD5 "82d05e03b93e45f5a39b828dc9c6c29b"
+umbrella_defineopt (AUTOCONF_URLMD5 "bac878ad1e88ca3fcf7c570910cf9af1"
     STRING "MD5 of tar file")
 
 #
