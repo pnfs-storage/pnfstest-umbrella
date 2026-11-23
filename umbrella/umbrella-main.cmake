@@ -114,7 +114,8 @@
 #       3. set to ON with UMBRELLA_MYSETTING_ON=foo  or
 #          set to OFF with UMBRELLA_MYSETTING_OFF=foo
 #       4. set to ON with global UMBRELLA_MYSETTING=ON  (or OFF)
-#       5. FOO_MYSETTING will be undefined if none of the above applies
+#       5. FOO_MYSETTING is set to the default value from the
+#          umbrella_target_setting call (the third arg)
 #
 #   aside: internally the above translates to:
 #          umbrella_setting(MYSETTING foo FOO_MYSETTING)
@@ -248,15 +249,18 @@ endfunction()
 #
 function (umbrella_target_setting setting target initdefault type docstring)
 
-    # use target to get prefix, then build varname by appending setting name
+    # use target and setting to make a 'TARGET_SETTING' variable name.
+    # user may have defined this variable with -D or umbrella_opt_default().
     umbrella_targetvar_prefix("${target}" prefix)
     set(varname "${prefix}${setting}")
 
-    # if setting is set, read it into ${varname}.  o.w. ${varname} is !set
+    # if TARGET_SETTING was not defined, try using the umbrella setting
+    # values to initialize it.  will remain undefined if no settings found.
     umbrella_setting(${setting} ${target} ${varname} ${ARGN})
 
-    # create variable in cache using setting value already loaded in
-    # variable varname, or if that is !set use the initdefault
+    # create cache variable using the current value (if defined).
+    # if the variable is not defined, use initdefault to set it.
+    # (note: cache variables are global, no need for PARENT_SCOPE)
     umbrella_defineopt(${varname} ${initdefault} ${type} "${docstring}")
 
 endfunction()
