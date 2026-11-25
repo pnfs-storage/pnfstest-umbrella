@@ -325,6 +325,8 @@ endfunction()
 #    ON  - always use a prebuilt version of target (fails if !found)
 #    OFF - never use a prebuilt version of target (we always build it)
 #    TRY - use a prebuilt version of target if found, otherwise we build it
+# the default PREBUILT value is OFF, but it can be overridden using
+# umbrella_prebuilt_default.
 #
 function (umbrella_prebuilt target)
     umbrella_target_setting(PREBUILT ${target} OFF STRING
@@ -332,10 +334,28 @@ function (umbrella_prebuilt target)
 endfunction()
 
 #
+# umbrella_prebuilt_default: override the default PREBUILT value
+# (of "OFF") for the target with the given value ("TRY" or "ON").
+# intended to be used in umbrella/*.cmake files before a call
+# to umbrella_prebuilt_check() for packages that are often available
+# as part of the OS install (e.g. python).
+#
+function (umbrella_prebuilt_default target value)
+    string(TOUPPER "${value}" value)     # make it case insensitive
+    if (NOT value MATCHES "^(OFF|ON|TRY)$")
+        message(FATAL_ERROR "umbrella_prebuilt_default: invalid ${value}")
+    endif()
+    umbrella_targetvar_prefix("${target}" prefix)
+    if (NOT DEFINED ${prefix}PREBUILT)
+        set (${prefix}PREBUILT ${value} PARENT_SCOPE)
+    endif()
+endfunction()
+
+#
 # umbrella_prebuilt_check_mktarg: helper function.  does the checks
 # and makes a custom target for prebuilt targets.
 #
-function(umbrella_prebuilt_check_mktarg target value check)
+function (umbrella_prebuilt_check_mktarg target value check)
     if("${check}" STREQUAL "")
         set(UMBRELLA_PREBUILT_CHECK_${target} 1)       # no check requested
     elseif ("${check}" STREQUAL FILE)
@@ -373,7 +393,7 @@ endfunction()
 # is prebuilt is somewhere we can find it).   the CMAKE_PREFIX_PATH
 # can be used to expand the search for prebuilt targets.
 #
-function(umbrella_prebuilt_check target)
+function (umbrella_prebuilt_check target)
     if (NOT TARGET "${target}")
 
         # get target prefix, read PREBUILT target setting, get target's value
@@ -468,7 +488,7 @@ endfunction ()
 # umbrella_get_pkgcfglist: get list of package cfg directories
 # currently configured in the environment that we need to consider.
 #
-function(umbrella_get_pkgcfglist outvar)
+function (umbrella_get_pkgcfglist outvar)
     unset(rv)
     set(srcvars PKG_CONFIG_PATH)
     if("${CMAKE_C_COMPILER_WRAPPER}" STREQUAL "CrayPrgEnv")
@@ -490,7 +510,7 @@ endfunction()
 # this is what we pass down to projects as their ${CMAKE_PREFIX_PATH}.
 # include directories specified to pkgconfig (PKG_CONFIG_PATH...).
 #
-function(umbrella_get_prefixpath pkgcfglist outvar)
+function (umbrella_get_prefixpath pkgcfglist outvar)
     set(rv ${CMAKE_PREFIX_PATH})        # start with our prefix path...
     # cray: newer versions of cmake already added to system prefix path
     if("${CMAKE_C_COMPILER_WRAPPER}" STREQUAL "CrayPrgEnv" AND
