@@ -357,7 +357,8 @@ endfunction()
 #
 function (umbrella_prebuilt_check_mktarg target value check)
     if("${check}" STREQUAL "")
-        set(UMBRELLA_PREBUILT_CHECK_${target} 1)       # no check requested
+        # no check requested
+        set(UMBRELLA_PREBUILT_CHECK_${target} 1 CACHE INTERNAL "")
     elseif ("${check}" STREQUAL FILE)
         find_file(UMBRELLA_PREBUILT_CHECK_${target} ${ARGN})
     elseif("${check}" STREQUAL LIBRARY)
