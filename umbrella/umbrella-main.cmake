@@ -360,7 +360,9 @@ function (umbrella_prebuilt_check_mktarg target value check)
         # no check requested
         set(UMBRELLA_PREBUILT_CHECK_${target} 1 CACHE INTERNAL "")
     elseif ("${check}" STREQUAL FILE)
-        find_file(UMBRELLA_PREBUILT_CHECK_${target} ${ARGN})
+        # add path suffixes for systems that do multiarch include dirs
+        find_file(UMBRELLA_PREBUILT_CHECK_${target} ${ARGN}
+                  PATH_SUFFIXES "${CMAKE_LIBRARY_ARCHITECTURE}")
     elseif("${check}" STREQUAL LIBRARY)
         find_library(UMBRELLA_PREBUILT_CHECK_${target} ${ARGN})
     elseif("${check}" STREQUAL PROGRAM)
